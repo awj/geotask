@@ -1,5 +1,7 @@
 # A project represents an area where tasks need to be performed.
 class Project < ApplicationRecord
+  has_many :tasks, inverse_of: :project
+
   validates :north, :south, :east, :west, presence: true, numericality: true
   validates :name, presence: true, length: { minimum: 4, maximum: 50 }
   validates :permalink, uniqueness: true, if: :has_permalink?
@@ -19,6 +21,15 @@ class Project < ApplicationRecord
 
   def has_permalink?
     permalink.present?
+  end
+
+  # Does the given locatable object lie within the bounds of this
+  # project?
+  def contains?(locatable)
+    return true unless locatable.has_location?
+
+    [north, south].include?(locatable.lat) &&
+      [east, west].include?(locatable.lon)
   end
 
   private

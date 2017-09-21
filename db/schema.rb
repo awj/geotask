@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170921022513) do
+ActiveRecord::Schema.define(version: 20170921025406) do
 
   create_table "projects", force: :cascade do |t|
     t.string "name", null: false
@@ -27,6 +27,17 @@ ActiveRecord::Schema.define(version: 20170921022513) do
     t.index ["permalink"], name: "index_projects_on_permalink"
     t.index ["south"], name: "index_projects_on_south"
     t.index ["west"], name: "index_projects_on_west"
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.integer "project_id"
+    t.string "name", null: false
+    t.decimal "lat"
+    t.decimal "lon"
+    t.boolean "complete", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 
 end
