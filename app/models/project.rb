@@ -3,7 +3,7 @@ class Project < ApplicationRecord
   has_many :tasks, inverse_of: :project
 
   validates :north, :south, :east, :west, presence: true, numericality: true
-  validates :name, presence: true, length: { minimum: 4, maximum: 50 }
+  validates :name, presence: true, length: { minimum: 4, maximum: 50, allow_nil: true }
   validates :permalink, uniqueness: true, if: :has_permalink?
 
   before_validation :set_permalink
@@ -37,7 +37,7 @@ class Project < ApplicationRecord
   # If the permalink doesn't already exist, make one up based on the
   # name.
   def set_permalink
-    return if permalink.present?
+    return if permalink.present? || name.blank?
 
     self.permalink = name.parameterize
   end
