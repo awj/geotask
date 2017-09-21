@@ -1,0 +1,11 @@
+park_cleanup:
+  name: Park cleanup
+  permalink: park-cleanup
+  description: |
+    Miscellaneous cleanup and maintenance of the park
+  north: 39.908133
+  south: 39.904536
+  east:  -105.059492
+  west:  -105.063291
+  
+  
