@@ -1,0 +1,19 @@
+remove_graffiti:
+  name: "Remove graffiti"
+  project: park_cleanup
+  lat: 39.90522
+  lon: -105.059987
+  complete: false
+
+mow_grass:
+  name: "Mow grass"
+  project: park_cleanup
+  complete: false
+
+replace_lights:
+  name: "Replace lights"
+  project: park_cleanup
+  lat: 39.90792
+  lon: -105.06021
+  complete: false
+  
