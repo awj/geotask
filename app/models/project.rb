@@ -28,8 +28,8 @@ class Project < ApplicationRecord
   def contains?(locatable)
     return true unless locatable.has_location?
 
-    [north, south].include?(locatable.lat) &&
-      [east, west].include?(locatable.lon)
+    (south..north).include?(locatable.lat) &&
+      (west..east).include?(locatable.lon)
   end
 
   private

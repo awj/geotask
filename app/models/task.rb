@@ -22,6 +22,12 @@ class Task < ApplicationRecord
   scope :complete, -> { where complete: true }
   scope :incomplete, -> { where complete: false }
 
+  # Not appreciably different from `scope` use above, except that this
+  # gets checked by code coverage.
+  def self.by_priority
+    order created_at: :desc
+  end
+
   # Does this task have a location, or is it available anywhere?
   def has_location?
     # Since we require presence of both lat&lon, checking for one
@@ -36,5 +42,9 @@ class Task < ApplicationRecord
     return if project.blank?
     
     errors.add(:base, :outside_project) unless project.contains?(self)
+  end
+
+  def setup_record
+    self.complete = false if complete.nil?
   end
 end

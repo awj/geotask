@@ -31,4 +31,27 @@ RSpec.describe Project, type: :model do
 
     expect(project.to_param).to eq("park-cleanup")
   end
+
+  it "#contains?" do
+    project = projects(:park_cleanup)
+    outside_loc = double(
+      has_location?: true,
+      lat: project.north + 10,
+      lon: project.east + 10
+    )
+    
+    inside_loc = double(
+      has_location?: true,
+      lat: (project.north + project.south) / 2.0,
+      lon: (project.east + project.west) / 2.0
+    )
+
+    no_loc = double(has_location?: false)
+
+    aggregate_failures do
+      expect(project.contains?(outside_loc)).to be_falsey
+      expect(project.contains?(inside_loc)).to be_truthy
+      expect(project.contains?(no_loc)).to be_truthy
+    end
+  end
 end
