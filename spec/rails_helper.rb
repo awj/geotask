@@ -26,6 +26,19 @@ require 'rspec/rails'
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+RSpec::Matchers.define :have_content_type do |expected|
+  match do |actual|
+    # Not the most accurate way of checking this, but it does well
+    # enough.
+    actual.headers["Content-Type"].start_with?(expected)
+  end
+
+  failure_message do |actual|
+    found = actual.headers["Content-Type"]
+    "expected Content-Type=#{expected}, found #{found}"
+  end
+end
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
