@@ -3,11 +3,35 @@ require 'rails_helper'
 describe "/projects" do
   fixtures :projects
 
-  it "index" do
+  describe "index" do
+    it "for html" do
+    end
+
+    it "for json" do
+      get "/projects", headers: { accept: "application/json" }
+
+      aggregate_failures do
+        expect(response).to have_http_status(:ok)
+        expect(response).to have_content_type("application/json")
+        json = JSON.parse(response.body)
+
+        meta = json["meta"]
+        projects = json["projects"]
+        expect(meta).to include("current_page" => 1, "total_pages" => 1, "total_count" => 1)
+        expect(projects[0]).to include("name" => "Park cleanup")
+      end
+    end
   end
 
   describe "show" do
     it "happy path" do
+      get "/projects/park-cleanup"
+
+      aggregate_failures do
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)["project"]
+        expect(json).to include("name" => "Park cleanup")
+      end
     end
 
     it "nonexistent projects" do
@@ -32,7 +56,7 @@ describe "/projects" do
       post "/projects", params: params
 
       expect(response).to have_http_status(:created)
-      expect(JSON.parse(response.body)).to include("name" => "Test", "permalink" => "test")
+      expect(JSON.parse(response.body)["project"]).to include("name" => "Test", "permalink" => "test")
     end
 
     it "invalid info" do
@@ -55,6 +79,19 @@ describe "/projects" do
   end
 
   it "update" do
+    id = projects(:park_cleanup).id
+
+    new_description = "Graffiti removal and minor repairs."
+
+    put "/projects/park-cleanup", params: { project: { description: new_description } }
+
+    aggregate_failures do
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)["project"]
+      expect(json["description"]).to eq(new_description)
+
+      expect(Project.find(id).description).to eq(new_description)
+    end
   end
 
   it "destroy" do

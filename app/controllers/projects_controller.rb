@@ -1,12 +1,14 @@
 class ProjectsController < ApplicationController
   before_action :find_project, except: [:index, :create]
   def index
-    @projects = scope
+    @projects = find_projects
 
     respond_to do |format|
       format.html
       format.json do
-        render json: @projects
+        render json: @projects,
+               meta: pagination(@projects),
+               each_serializer: ProjectSerializer
       end
     end
   end
@@ -42,7 +44,11 @@ class ProjectsController < ApplicationController
   private
 
   def scope
-    Project
+    Project.all
+  end
+
+  def find_projects
+    scope.page params[:page]
   end
 
   def paginate(relation)
